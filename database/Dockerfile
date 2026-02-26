@@ -1,0 +1,10 @@
+FROM mongo:7.0
+
+
+COPY init-scripts/ /docker-entrypoint-initdb.d/
+
+ENV MONGO_INITDB_ROOT_USERNAME=admin
+ENV MONGO_INITDB_ROOT_PASSWORD=secret
+ENV MONGO_INITDB_DATABASE=myapp
+
+EXPOSE 27017
