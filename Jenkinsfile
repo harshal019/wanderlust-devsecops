@@ -124,5 +124,6 @@ pipeline {
             mimeType: 'text/html',
             attachmentsPattern: 'trivy*.html'
 
+        }
     }
 }
