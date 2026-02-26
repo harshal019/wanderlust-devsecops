@@ -2,8 +2,8 @@ pipeline {
     agent any
    
     environment {
-        SCANNER_HOME=tool 'sonar-scanner',
-        DOCKERHUB_USERNAME= "harshalg01",
+        SCANNER_HOME=tool('sonar-scanner')
+        DOCKERHUB_USERNAME= "harshalg01"
         IMAGE_TAG= "${BUILD_NUMBER}"
     }
     stages {
