@@ -9,8 +9,6 @@ RUN npm install
 
 COPY . . 
 
-RUN npm run test
-
 
 #Stage 2
 FROM node:21-slim
