@@ -4,8 +4,14 @@ pipeline {
     environment {
         SCANNER_HOME=tool('sonar-scanner')
         DOCKERHUB_USERNAME= "harshalg01"
-        IMAGE_TAG= "${BUILD_NUMBER}"
+        VERSION = "v${BUILD_NUMBER}"
+
     }
+
+    parameters {
+        string(name: 'VERSION', defaultValue: 'v1', description: 'Docker Image Version')
+    }
+
     stages {
         stage ("clean workspace") {
             steps {
@@ -60,8 +66,8 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 sh """
-                docker build -t ${DOCKERHUB_USERNAME}/wanderlust-api:${IMAGE_TAG} ./backend
-                docker build -t ${DOCKERHUB_USERNAME}/wanderlust-web:${IMAGE_TAG} ./frontend
+                docker build -t ${DOCKERHUB_USERNAME}/wanderlust-api:${VERSION}  ./backend
+                docker build -t ${DOCKERHUB_USERNAME}/wanderlust-web:${VERSION} ./frontend
                 """
             }
         }
@@ -70,10 +76,10 @@ pipeline {
             steps {
                 sh """
                 trivy image --format table -o trivy-backend-image-report.html \
-                    ${DOCKERHUB_USERNAME}/wanderlust-api:${IMAGE_TAG}
+                    ${DOCKERHUB_USERNAME}/wanderlust-api:${VERSION}
 
                 trivy image --format table -o trivy-frontend-image-report.html \
-                    ${DOCKERHUB_USERNAME}/wanderlust-web:${IMAGE_TAG}
+                    ${DOCKERHUB_USERNAME}/wanderlust-web:${VERSION}
                 """
             }
         }
@@ -86,15 +92,15 @@ pipeline {
                 )]) {
                     sh """
                     echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                    docker push ${DOCKERHUB_USERNAME}/wanderlust-api:${IMAGE_TAG}
-                    docker push ${DOCKERHUB_USERNAME}/wanderlust-web:${IMAGE_TAG}
+                    docker push ${DOCKERHUB_USERNAME}/wanderlust-api:${VERSION}
+                    docker push ${DOCKERHUB_USERNAME}/wanderlust-web:${VERSION}
                     docker logout                         
                     """
                 }
             }
         }
 
-       stage('Deploy to Container') {                    // ✅ compose handles everything
+       stage('Deploy to Container') {                  
             steps {
                 sh """
                 docker compose down                       
