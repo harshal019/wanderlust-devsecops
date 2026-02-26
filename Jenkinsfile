@@ -14,8 +14,7 @@ pipeline {
         }
         stage ("Git Checkout") {
             steps {
-                git 'https://github.com/harshal019/food-delivery-devops-microservices.git'            
-                }
+                git branch: 'main', url: 'https://github.com/harshal019/wanderlust-devsecops.git'
         }
 
         stage("Sonarqube Analysis"){
