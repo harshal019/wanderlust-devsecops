@@ -22,8 +22,8 @@ pipeline {
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh ''' 
-                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=zomato \
-                        -Dsonar.projectKey=zomato 
+                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust
+                        -Dsonar.projectKey=wanderlust
                     '''
                 }
             }
@@ -37,10 +37,10 @@ pipeline {
         }
 
 
-        stage('OWASP FS SCAN') {
+       stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck(
-                    additionalArguments: '--scan ./app --out .',
+                    additionalArguments: '--scan ./backend --scan ./frontend --scan ./ --out .',
                     odcInstallation: 'DP-Check'
                 )
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
