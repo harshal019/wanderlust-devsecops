@@ -22,7 +22,8 @@ pipeline {
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh ''' 
-                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=wanderlust \
                         -Dsonar.projectKey=wanderlust
                     '''
                 }
