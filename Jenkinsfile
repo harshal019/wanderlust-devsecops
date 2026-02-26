@@ -100,13 +100,12 @@ pipeline {
             }
         }
 
-       stage('Deploy to Container') {                  
+       stage('Trigger CD Pipeline') {
             steps {
-                sh """
-                docker compose down                       
-                docker compose pull                       
-                docker compose up -d                      
-                """
+                build job: 'Wanderlust-CD',
+                parameters: [
+                    string(name: 'VERSION', value: "${VERSION}")
+                ]
             }
         }
     }
