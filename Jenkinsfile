@@ -3,7 +3,7 @@ pipeline {
    
     environment {
         SCANNER_HOME=tool 'sonar-scanner',
-        DOCKERHUB_USERNAME= "harshalg01
+        DOCKERHUB_USERNAME= "harshalg01",
         IMAGE_TAG= "${BUILD_NUMBER}"
     }
     stages {
@@ -50,8 +50,8 @@ pipeline {
 
         stage ("Trivy File Scan") {
             steps {
-                sh "trivy fs . > trivy.txt"
-            }
+                sh "trivy fs --format table -o trivy-fs-report.html ."
+
         }
 
         stage('Build Docker Images') {
@@ -122,7 +122,7 @@ pipeline {
             """,
             to: 'harshaldgharat01@gmail.com',
             mimeType: 'text/html',
-            attachmentsPattern: 'trivy*.txt'
-        }
+            attachmentsPattern: 'trivy*.html'
+
     }
 }
