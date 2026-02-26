@@ -15,14 +15,15 @@ pipeline {
         stage ("Git Checkout") {
             steps {
                 git branch: 'main', url: 'https://github.com/harshal019/wanderlust-devsecops.git'
+
+        }
         }
 
         stage("Sonarqube Analysis"){
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh ''' 
-                        $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=wanderlust \
+                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust
                         -Dsonar.projectKey=wanderlust
                     '''
                 }
@@ -40,7 +41,7 @@ pipeline {
        stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck(
-                    additionalArguments: '--scan . --out .',
+                    additionalArguments: '--scan ./ --out .',
                     odcInstallation: 'DP-Check'
                 )
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
