@@ -12,8 +12,6 @@
 		"installer": "npm i && npm run install-backend && npm run install-frontend",
 		"prepare": "husky install",
 		"postinstall": "node ./scripts/postInstall.mjs"
-	},
-	"devDependencies": {
-		"husky": "^9.1.7"
 	}
+	
 }
