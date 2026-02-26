@@ -40,7 +40,7 @@ pipeline {
        stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck(
-                    additionalArguments: '--scan ./backend --scan ./frontend --scan ./ --out .',
+                    additionalArguments: '--scan . --out .',
                     odcInstallation: 'DP-Check'
                 )
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
