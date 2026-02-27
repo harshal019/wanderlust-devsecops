@@ -4,12 +4,12 @@ import Post from '../../../models/post.js';
 import server from '../../../server.js';
 import { validCategories, HTTP_STATUS, RESPONSE_MESSAGES } from '../../../utils/constants.js';
 import { createPostObject } from '../../utils/helper-objects.js';
-import { expect, jest, it, afterAll, describe } from '@jest/globals';
+
 afterAll(async () => {
   await mongoose.disconnect();
 });
 
-let postId: any;
+let postId;
 const invalidPostId = '609c16c69405b14574c99999';
 describe('Integration Tests: Post creation', () => {
   it('Post creation: Success - All fields are valid', async () => {
@@ -20,7 +20,7 @@ describe('Integration Tests: Post creation', () => {
     expect(response.status).toBe(HTTP_STATUS.OK);
     expect(response.body).toHaveProperty('_id');
     expect(fetchedPost).not.toBeNull();
-    expect(fetchedPost?.title).toBe(createPostObject().title);
+    expect(fetchedPost.title).toBe(createPostObject().title);
   });
 
   it('Post creation: Failure - Missing required fields', async () => {
@@ -28,9 +28,7 @@ describe('Integration Tests: Post creation', () => {
     delete postObject.title;
     const response = await request(server).post('/api/posts').send(postObject);
 
-    expect(JSON.parse(response.text)).toEqual({
-      message: RESPONSE_MESSAGES.COMMON.REQUIRED_FIELDS,
-    });
+    expect(JSON.parse(response.text)).toEqual({ message: RESPONSE_MESSAGES.COMMON.REQUIRED_FIELDS });
     expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
   });
 
@@ -60,17 +58,13 @@ describe('Integration Tests: Post creation', () => {
 
   it('Post creation: Failure - Internal server error', async () => {
     // Mocking a scenario where the server encounters an internal error during post creation
-    jest
-      .spyOn(Post.prototype, 'save')
-      .mockRejectedValueOnce(new Error(RESPONSE_MESSAGES.COMMON.INTERNAL_SERVER_ERROR));
+    jest.spyOn(Post.prototype, 'save').mockRejectedValueOnce(new Error(RESPONSE_MESSAGES.COMMON.INTERNAL_SERVER_ERROR));
 
     const postObject = createPostObject();
     const response = await request(server).post('/api/posts').send(postObject);
 
     expect(response.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR);
-    expect(JSON.parse(response.text)).toEqual({
-      message: RESPONSE_MESSAGES.COMMON.INTERNAL_SERVER_ERROR,
-    });
+    expect(JSON.parse(response.text)).toEqual({ message: RESPONSE_MESSAGES.COMMON.INTERNAL_SERVER_ERROR });
   });
 });
 describe('Integration Tests: Get all posts', () => {
@@ -127,7 +121,7 @@ describe('Integration Tests: Update Post', () => {
 
     expect(response.status).toBe(HTTP_STATUS.OK);
     expect(updatedPost).not.toBeNull();
-    expect(updatedPost?.title).toBe('Updated Post');
+    expect(updatedPost.title).toBe('Updated Post');
   });
 
   it('Update Post: Failure - Invalid post ID', async () => {

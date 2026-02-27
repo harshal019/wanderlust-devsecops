@@ -21,4 +21,3 @@ COPY --from=backend-builder /app .
 EXPOSE 8080
 
 CMD ["npm", "start"]
-
