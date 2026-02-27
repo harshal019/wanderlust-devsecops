@@ -2,10 +2,11 @@ import HomePage from '@/pages/home-page';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
+
 const mockedUseNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as Record<string, typeof import('react-router-dom')>),
+  ...(jest.requireActual('react-router-dom') as Record<string, any>),
   useNavigate: () => mockedUseNavigate,
 }));
 
@@ -104,7 +105,7 @@ describe('Integration Test: Home Route', () => {
     );
     //ACT
     //ASSERT
-    expect(await screen.findAllByTestId('postcard'));
+    expect(await screen.findAllByTestId('postcard')).toHaveLength(10);
   });
   test('Home Route: Verify navigation on post card click under All Posts section', async () => {
     //ARRANGE
@@ -116,9 +117,10 @@ describe('Integration Test: Home Route', () => {
     //ACT
     //ASSERT
     const allPostCard = await screen.findAllByTestId('postcard');
+    expect(allPostCard).toHaveLength(10);
     /**
      * INFO:
-     * - Read following article if you have confusion why target-element is
+     * - Read following artilce if you have confusion why target-element is
      * inner-div or img-element inside the inner-div.
      * - REF: https://javascript.info/bubbling-and-capturing
      *
