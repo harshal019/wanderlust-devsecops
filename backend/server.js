@@ -23,8 +23,8 @@ connectDB();
 connectToRedis();
 
 // API route
-app.use('/posts', postsRouter);
-app.use('/auth', authRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/', (req, res) => {
   res.send('Yay!! Backend of wanderlust prod app is now accessible');
