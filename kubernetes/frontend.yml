@@ -15,7 +15,7 @@ spec:
     spec:
       containers: 
         - name: frontend
-          image: harshalg01/wanderlust-web:v5
+          image: harshalg01/wanderlust-web:v6
           ports:
             - containerPort: 5173
           
