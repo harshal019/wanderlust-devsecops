@@ -16,8 +16,8 @@ export default function BlogFeed() {
   useEffect(() => {
     let categoryEndpoint =
       selectedCategory === 'featured'
-        ? '/api/posts/featured'
-        : `/api/posts/categories/${selectedCategory}`;
+        ? '/posts/featured'
+        : `/posts/categories/${selectedCategory}`;
 
     setLoading(true);
     axios
@@ -33,7 +33,7 @@ export default function BlogFeed() {
 
   useEffect(() => {
     axios
-      .get(import.meta.env.VITE_API_PATH + '/api/posts/latest')
+      .get(import.meta.env.VITE_API_PATH + '/posts/latest')
       .then((response) => {
         setLatestPosts(response.data);
       })
