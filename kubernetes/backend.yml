@@ -16,7 +16,7 @@ spec:
     spec:
       containers: 
         - name: backend
-          image: harshalg01/wanderlust-api:v2
+          image: harshalg01/wanderlust-api:v3
           port:
             - containerPort: 8080
           envFrom:
