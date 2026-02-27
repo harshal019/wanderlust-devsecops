@@ -1,4 +1,4 @@
-FROM node:20 AS frontend-builder
+FROM node:21 AS frontend-builder
 
 WORKDIR /app
 
@@ -7,6 +7,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+ARG VITE_API_PATH
+ENV VITE_API_PATH=$VITE_API_PATH
 
 RUN npm run build
 
