@@ -10,6 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:819720040834:certificate/a1dfae1b-ce3c-4b02-b65e-a01e5c1a3c1d
 spec:
+  ingressClassName: alb
   rules:
   - host: wanderlust.harshalgharat.site
     http:
@@ -28,3 +29,4 @@ spec:
             name: backend-svc
             port:
               number: 8080
+
