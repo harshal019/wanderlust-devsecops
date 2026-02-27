@@ -1,10 +1,11 @@
 pipeline {
-    agent any
+    
+    agent {label 'Node'}
+
    
     environment {
         SCANNER_HOME=tool('sonar-scanner')
         DOCKERHUB_USERNAME= "harshalg01"
-        VERSION = "v${BUILD_NUMBER}"
 
     }
 
@@ -66,8 +67,9 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 sh """
-                docker build -t ${DOCKERHUB_USERNAME}/wanderlust-api:${VERSION}  ./backend
-                docker build -t ${DOCKERHUB_USERNAME}/wanderlust-web:${VERSION} ./frontend
+                    docker build -t ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}  ./backend
+                    docker build --build-arg VITE_API_PATH=/api \
+                        -t  ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION} ./frontend
                 """
             }
         }
@@ -76,10 +78,10 @@ pipeline {
             steps {
                 sh """
                 trivy image --format table -o trivy-backend-image-report.html \
-                    ${DOCKERHUB_USERNAME}/wanderlust-api:${VERSION}
+                    ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}
 
                 trivy image --format table -o trivy-frontend-image-report.html \
-                    ${DOCKERHUB_USERNAME}/wanderlust-web:${VERSION}
+                    ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION}
                 """
             }
         }
@@ -92,8 +94,8 @@ pipeline {
                 )]) {
                     sh """
                     echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                    docker push ${DOCKERHUB_USERNAME}/wanderlust-api:${VERSION}
-                    docker push ${DOCKERHUB_USERNAME}/wanderlust-web:${VERSION}
+                    docker push ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}
+                    docker push ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION}
                     docker logout                         
                     """
                 }
@@ -104,7 +106,7 @@ pipeline {
             steps {
                 build job: 'Wanderlust-CD',
                 parameters: [
-                    string(name: 'VERSION', value: "${VERSION}")
+                    string(name: 'VERSION', value: "${params.VERSION}")
                 ]
             }
         }
