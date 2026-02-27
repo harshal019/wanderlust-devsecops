@@ -1,0 +1,90 @@
+pipeline {
+    agent { label 'Node' }
+
+    parameters {
+        string(
+            name: 'VERSION',
+            defaultValue: '',
+            description: 'Docker Image Version from CI'
+        )
+    }
+
+    environment {
+        DOCKERHUB_USERNAME = "harshalg01"
+    
+    }
+
+    stages {
+
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout GitOps Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/harshal019/wanderlust-devsecops.git'
+
+            }
+        }
+
+        stage('Validate Version') {
+            steps {
+                script {
+                    if (!params.VERSION?.trim()) {
+                        error("VERSION parameter is empty!")
+                    }
+                }
+            }
+        }
+
+        stage('Update Kubernetes Image Tags') {
+            steps {
+                sh """
+                sed -i 's|image: .*wanderlust-api.*|image: ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}|g' kubernetes/backend.yaml
+
+                sed -i 's|image: .*wanderlust-web.*|image: ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION}|g' kubernetes/frontend.yaml
+                """
+            }
+        }
+
+        stage('Commit & Push Changes (GitOps)') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'Github-cred',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_PASS'
+                )]) {
+                    sh """
+                    git config user.email "devops@wanderlust.com"
+                    git config user.name "Jenkins"
+
+                    git add .
+                    git commit -m "Update image version to ${params.VERSION}" || echo "No changes to commit"
+
+                    git push https://github.com/harshal019/wanderlust-devsecops.git main
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext(
+                subject: "CD Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Deployment updated successfully to version ${params.VERSION}",
+                to: "harshaldgharat01@gmail.com"
+            )
+        }
+
+        failure {
+            emailext(
+                subject: "CD Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Deployment failed for version ${params.VERSION}",
+                to: "harshaldgharat01@gmail.com"
+            )
+        }
+    }
+}
