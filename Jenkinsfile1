@@ -42,9 +42,9 @@ pipeline {
         stage('Update Kubernetes Image Tags') {
             steps {
                 sh """
-                sed -i 's|image: .*wanderlust-api.*|image: ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}|g' kubernetes/backend.yaml
+                sed -i 's|image: .*wanderlust-api.*|image: ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}|g' kubernetes/backend.yml
 
-                sed -i 's|image: .*wanderlust-web.*|image: ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION}|g' kubernetes/frontend.yaml
+                sed -i 's|image: .*wanderlust-web.*|image: ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION}|g' kubernetes/frontend.yml
                 """
             }
         }
