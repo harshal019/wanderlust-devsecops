@@ -145,8 +145,7 @@ ALB is automatically created when Ingress resource is applied.
 ```bash
 kubectl create namespace argocd
 
-kubectl apply -n argocd \
-  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 ---
 
@@ -154,15 +153,16 @@ kubectl apply -n argocd \
 
 ```bash
 kubectl config get-contexts
-argocd cluster list
+
+shows argocd cluster list
+
 ```
+
 ---
 ## Import EKS Cluster into ArgoCD
 
 ```bash
-argocd cluster add \
-  Wanderlust@wanderlust.us-east-2.eksctl.io \
-  --name wanderlust-eks
+argocd cluster add harshal-eks@wanderlust.us-east-2.eksctl.io --name wanderlust-eks
 ```
 
 ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
