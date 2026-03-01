@@ -112,14 +112,14 @@ eksctl utils associate-iam-oidc-provider \
 ```bash
 eksctl create nodegroup --cluster=wanderlust \
                      --region=us-east-2 \
-                     --name=wanderlust \
-                     --node-type=t2.large \
+                     --name=wanderlust-ng \
+                     --node-type=t2.medium \
                      --nodes=2 \
                      --nodes-min=2 \
-                     --nodes-max=2 \
-                     --node-volume-size=29 \
+                     --nodes-max=5 \
+                     --node-volume-size=19 \
                      --ssh-access \
-                     --ssh-public-key=eks-nodegroup-key 
+                     --ssh-public-key=blog-key 
 ```
 
 ---
