@@ -88,13 +88,14 @@ This project demonstrates:
 
 # ☁️ Infrastructure Setup
 
-## 1️⃣ Create EKS Cluster
+### 1️⃣ Create EKS Cluster
 
 ```bash
 eksctl create cluster \
   --name wanderlust \
   --region us-east-2 \
   --without-nodegroup
+```
 
 ---
 
@@ -105,6 +106,7 @@ eksctl utils associate-iam-oidc-provider \
   --cluster wanderlust \
   --region us-east-2 \
   --approve
+```
 
 ---
 
@@ -116,16 +118,19 @@ eksctl create nodegroup \
   --name wanderlust-ng \
   --node-type t2.large \
   --nodes 2
+```
 
 ---
 
 ### 4️⃣ Install AWS Load Balancer Controller (Helm)
 
+```bash
 helm repo add eks https://aws.github.io/eks-charts
 
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
   --set clusterName=wanderlust
+```
 
 ALB is automatically created when Ingress resource is applied.
 
