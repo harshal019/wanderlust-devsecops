@@ -10,24 +10,21 @@ Deployed on Amazon EKS using ALB Ingress and secured with AWS Certificate Manage
 
 ---
 
-# 📚 Project Navigation
+## 📚 Contents
 
-| Section | Description |
-|----------|------------|
-| 🚀 Live Application | Production URL with SSL |
-| 📌 Project Overview | High-level system explanation |
-| 🏗 Architecture | Complete system flow |
-| 🌐 Traffic Flow | Request routing inside cluster |
-| 🧱 Tech Stack | Technologies used |
-| 🔐 CI Pipeline | DevSecOps implementation |
-| 🔄 CD + GitOps | Deployment automation |
-| ☁ Infrastructure Setup | EKS, OIDC & ALB setup |
-| 📊 Monitoring | Prometheus & Grafana |
-| 🔑 Configuration | ConfigMap & Secrets |
-| 🏛 Backend Design | MVC architecture |
-| 🔥 Challenges Solved | Real-world debugging |
-| 📸 Screenshots | Proof of deployment |
-| 🚀 Future Improvements | Scalability roadmap |
+- [Overview](#-project-overview)
+- [Architecture](#-high-level-architecture)
+- [Tech Stack](#-tech-stack)
+- [Infrastructure Setup](#-infrastructure-setup)
+- [AWS Load Balancer Controller](#-aws-load-balancer-controller-setup)
+- [GitOps with ArgoCD](#-gitops-with-argocd)
+- [CI/CD Pipeline](#-cicd-pipeline-devsecops)
+- [Monitoring Setup](#-monitoring-prometheus--grafana)
+- [Configuration Management](#-configuration-management)
+- [Challenges Solved](#-challenges-solved)
+- [Screenshots Required](#-screenshots-required)
+- [Future Improvements](#-future-improvements)
+
 
 ---
 
@@ -140,20 +137,30 @@ ALB is automatically created when Ingress resource is applied.
 
 ## Install ArgoCD
 
+```bash
 kubectl create namespace argocd
 
 kubectl apply -n argocd \
   -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
+```
 ---
 
-## Import EKS Cluster
+## Check Available Clusters
 
+```bash
+kubectl config get-contexts
+argocd cluster list
+```
+---
+## Import EKS Cluster into ArgoCD
+
+```bash
 argocd cluster add \
   Wanderlust@wanderlust.us-east-2.eksctl.io \
   --name wanderlust-eks
+```
 
-ArgoCD continuously monitors GitOps repository and syncs application changes automatically.
+ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 
 ---
 
@@ -183,6 +190,7 @@ ArgoCD continuously monitors GitOps repository and syncs application changes aut
 
 # 📊 Monitoring (Helm Based)
 
+```bash
 helm repo add prometheus-community \
   https://prometheus-community.github.io/helm-charts
 
@@ -192,15 +200,16 @@ helm install monitoring \
   prometheus-community/kube-prometheus-stack \
   -n prometheus
 
+```
 Prometheus and Grafana exposed via ALB Ingress.
 
 ---
 
 # 🔑 Configuration Management
 
-- Docker images contain no environment variables
-- ConfigMap used for application config
-- Kubernetes Secret used for sensitive values (JWT, credentials)
+- No environment variables baked into Docker images
+- ConfigMap for application configuration
+- Kubernetes Secret for sensitive values
 - SSL handled via ACM
 - Path-based routing via Ingress
 
@@ -241,8 +250,7 @@ Redis middleware used for caching frequently accessed endpoints.
 - Use RDS instead of in-cluster MongoDB
 - Private subnets for backend services
 - Add CI caching optimization
-- Implement Canary deployment strategy
-
+- Terraform-based infrastructure provisioning
 ---
 
 # 👨‍💻 Author
