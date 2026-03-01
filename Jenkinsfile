@@ -68,8 +68,7 @@ pipeline {
             steps {
                 sh """
                     docker build -t ${DOCKERHUB_USERNAME}/wanderlust-api:${params.VERSION}  ./backend
-                    docker build --build-arg VITE_API_PATH=/api \
-                        -t  ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION} ./frontend
+                    docker build -t  ${DOCKERHUB_USERNAME}/wanderlust-web:${params.VERSION} ./frontend
                 """
             }
         }
