@@ -8,3 +8,4 @@ coverage/
 .idea/
 backend/dist
 package-lock.json
+.vscode
