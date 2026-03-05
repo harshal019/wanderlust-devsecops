@@ -3,8 +3,9 @@
 🔗 **Live Application:**  
 https://wanderlust.harshalgharat.site  
 
-![Preview Image](https://github.com/krishnaacharyaa/wanderlust/assets/116620586/17ba9da6-225f-481d-87c0-5d5a010a9538)
+![Home Page](Assets/images/01-app-live.png)
 
+![Post / Blog Page](Assets/images/01-app-live-2.png)
 
 Deployed on Amazon EKS using ALB Ingress and secured with AWS Certificate Manager (HTTPS).
 
@@ -22,7 +23,7 @@ Deployed on Amazon EKS using ALB Ingress and secured with AWS Certificate Manage
 - [Monitoring Setup](#-monitoring-prometheus--grafana)
 - [Configuration Management](#-configuration-management)
 - [Challenges Solved](#-challenges-solved)
-- [Screenshots Required](#-screenshots-required)
+- [Assets/images Required](#-Assets/images-required)
 - [Future Improvements](#-future-improvements)
 
 
@@ -46,6 +47,8 @@ This project demonstrates:
 ---
 
 # 🏗 High-Level Architecture
+
+![Architecture](Assets/DevSecOps+GitOps.gif)
 
 ---
 
@@ -136,6 +139,20 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 
 ALB is automatically created when Ingress resource is applied.
 
+### 🖼️ Ingress Resource
+
+![Ingress ALB](Assets/images/ingres.png)
+
+### 🖼️ AWS ALB Console
+
+![AWS ALB Console](Assets/images/10-aws-alb-console.png)
+
+### 🖼️ Route53 DNS Record
+
+![Route53 Record](Assets/images/route53.png)
+
+---
+
 ---
 
 # 🔄 GitOps Deployment (ArgoCD)
@@ -167,6 +184,10 @@ argocd cluster add harshal-eks@wanderlust.us-east-2.eksctl.io --name wanderlust-
 
 ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 
+### 🖼️ ArgoCD — Synced & Healthy
+
+![ArgoCD Sync](Assets/images/06-argocd-sync.png)
+
 ---
 
 # 🔐 CI/CD Pipeline (DevSecOps)
@@ -182,7 +203,29 @@ ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 - Trivy Image Scan
 - Push Versioned Image
 
+
+### 🖼️ CI Pipeline — All Stages
+
+![CI Pipeline](Assets/images/02-jenkins-ci.png)
+
 ---
+### 🖼️ SonarQube — Quality Gate Passed
+
+![SonarQube](Assets/images/03-sonarqube.png)
+
+---
+
+### 🖼️ DockerHub — Versioned Images
+---
+
+![DockerHub Images ](Assets/images/dockerhub1.png)
+
+---
+
+![DockerHub Images](Assets/images/dockerhub2.png)
+
+---
+
 
 ## Jenkins CD Stages
 
@@ -190,6 +233,21 @@ ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 - Push to GitOps Repository
 - Trigger ArgoCD Sync
 - Rolling Update Deployment
+
+### 🖼️ CD Pipeline — Deploy & Sync
+
+![CD Pipeline](Assets/images/02-jenkins-cd.png)
+
+---
+
+
+## ☸️ Kubernetes Cluster
+
+
+
+![K8s Pods & Services ](Assets/images/kubernates.png)
+
+---
 
 ---
 
@@ -208,6 +266,15 @@ helm install monitoring \
 ```
 Prometheus and Grafana exposed via ALB Ingress.
 
+### 🖼️ Grafana — Cluster Dashboard
+
+![Grafana Dashboard](Assets/images/grafana-1.png)
+ 
+
+### 🖼️ Prometheus — All Targets UP
+
+![Prometheus Targets](Assets/images/prometheus.png)
+
 ---
 
 # 🔑 Configuration Management
@@ -218,25 +285,11 @@ Prometheus and Grafana exposed via ALB Ingress.
 - SSL handled via ACM
 - Path-based routing via Ingress
 
+## 🖼️ ConfigMap & Secrets
+
+![ConfigMap and Secret](Assets/images/configmap-secret.png)
 ---
 
-# 🏛 Backend Architecture (MVC Pattern)
-
-Client  
-↓  
-Routes  
-↓  
-Controllers  
-↓  
-Services  
-↓  
-Models  
-↓  
-MongoDB  
-
-Redis middleware used for caching frequently accessed endpoints.
-
----
 
 # 🔥 Challenges Solved
 
@@ -257,6 +310,7 @@ Redis middleware used for caching frequently accessed endpoints.
 - Add CI caching optimization
 - Terraform-based infrastructure provisioning
 ---
+
 
 # 👨‍💻 Author
 
