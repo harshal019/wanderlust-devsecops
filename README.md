@@ -269,8 +269,11 @@ Prometheus and Grafana exposed via ALB Ingress.
 ### 🖼️ Grafana — Cluster Dashboard
 
 ![Grafana Dashboard](Assets/images/grafana-1.png)
- 
+---
 
+![](Assets/images/grafana-2.png)
+ 
+---
 ### 🖼️ Prometheus — All Targets UP
 
 ![Prometheus Targets](Assets/images/prometheus.png)
