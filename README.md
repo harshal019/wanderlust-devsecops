@@ -1,14 +1,23 @@
 # 🌍 Wanderlust – Production Grade MERN DevSecOps Deployment on AWS EKS
 
+![EKS](https://img.shields.io/badge/AWS-EKS-orange?logo=amazon-aws)
+![Jenkins](https://img.shields.io/badge/CI/CD-Jenkins-red?logo=jenkins)
+![ArgoCD](https://img.shields.io/badge/GitOps-ArgoCD-blue?logo=argo)
+![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes-blue?logo=kubernetes)
+![Docker](https://img.shields.io/badge/Container-Docker-blue?logo=docker)
+
 🔗 **Live Application:**  
 https://wanderlust.harshalgharat.site  
 
-![Home Page](Assets/images/01-app-live.png)
+![Home Page](Assets/screenshots/01-app-live.png)
 
-![Post / Blog Page](Assets/images/01-app-live-2.png)
+![Post / Blog Page](Assets/screenshots/01-app-live-2.png)
 
 Deployed on Amazon EKS using ALB Ingress and secured with AWS Certificate Manager (HTTPS).
 
+> A full-stack travel blog deployed end-to-end on AWS EKS with automated 
+> CI/CD, security scanning, GitOps sync, and real-time monitoring — 
+> zero manual deployments.
 ---
 
 ## 📚 Contents
@@ -23,7 +32,6 @@ Deployed on Amazon EKS using ALB Ingress and secured with AWS Certificate Manage
 - [Monitoring Setup](#-monitoring-prometheus--grafana)
 - [Configuration Management](#-configuration-management)
 - [Challenges Solved](#-challenges-solved)
-- [Assets/images Required](#-Assets/images-required)
 - [Future Improvements](#-future-improvements)
 
 
@@ -138,22 +146,22 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 ```
 
 ALB is automatically created when Ingress resource is applied.
-
+---
 ### 🖼️ Ingress Resource
-
-![Ingress ALB](Assets/images/ingres.png)
-
+---
+![Ingress ALB](Assets/screenshots/ingress.png)
+---
 ### 🖼️ AWS ALB Console
 
-![AWS ALB Console](Assets/images/10-aws-alb-console.png)
-
+![AWS ALB Console](Assets/screenshots/10-aws-alb-console.png)
+---
 ### 🖼️ Route53 DNS Record
 
-![Route53 Record](Assets/images/route53.png)
+![Route53 Record](Assets/screenshots/route53.png)
+
 
 ---
 
----
 
 # 🔄 GitOps Deployment (ArgoCD)
 
@@ -171,7 +179,6 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 ```bash
 kubectl config get-contexts
 
-shows argocd cluster list
 
 ```
 
@@ -186,7 +193,7 @@ ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 
 ### 🖼️ ArgoCD — Synced & Healthy
 
-![ArgoCD Sync](Assets/images/06-argocd-sync.png)
+![ArgoCD Sync](Assets/screenshots/06-argocd-sync.png)
 
 ---
 
@@ -206,23 +213,22 @@ ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 
 ### 🖼️ CI Pipeline — All Stages
 
-![CI Pipeline](Assets/images/02-jenkins-ci.png)
+![CI Pipeline](Assets/screenshots/02-jenkins-ci.png)
 
 ---
 ### 🖼️ SonarQube — Quality Gate Passed
 
-![SonarQube](Assets/images/03-sonarqube.png)
+![SonarQube](Assets/screenshots/03-sonarqube.png)
 
 ---
 
 ### 🖼️ DockerHub — Versioned Images
+
+![DockerHub Images ](Assets/screenshots/dockerhub1.png)
+
 ---
 
-![DockerHub Images ](Assets/images/dockerhub1.png)
-
----
-
-![DockerHub Images](Assets/images/dockerhub2.png)
+![DockerHub Images](Assets/screenshots/dockerhub2.png)
 
 ---
 
@@ -236,18 +242,14 @@ ArgoCD continuously syncs Kubernetes manifests from GitOps repository.
 
 ### 🖼️ CD Pipeline — Deploy & Sync
 
-![CD Pipeline](Assets/images/02-jenkins-cd.png)
+![CD Pipeline](Assets/screenshots/02-jenkins-cd.png)
 
 ---
 
 
 ## ☸️ Kubernetes Cluster
-
-
-
-![K8s Pods & Services ](Assets/images/kubernates.png)
-
----
+> `kubectl get pods,svc -n wanderlust -o wide`
+![K8s Pods & Services](Assets/screenshots/kubernetes.png)
 
 ---
 
@@ -268,15 +270,17 @@ Prometheus and Grafana exposed via ALB Ingress.
 
 ### 🖼️ Grafana — Cluster Dashboard
 
-![Grafana Dashboard](Assets/images/grafana-1.png)
+**Node Metrics Dashboard**
+![Grafana — Node Metrics](Assets/screenshots/grafana-node-metrics.png)
+
 ---
 
-![](Assets/images/grafana-2.png)
- 
+**Kubernetes Cluster Dashboard**
+![Grafana — Kubernetes Cluster](Assets/screenshots/grafana-kubernetes-cluster.png)
 ---
 ### 🖼️ Prometheus — All Targets UP
 
-![Prometheus Targets](Assets/images/prometheus.png)
+![Prometheus Targets](Assets/screenshots/prometheus.png)
 
 ---
 
@@ -290,18 +294,24 @@ Prometheus and Grafana exposed via ALB Ingress.
 
 ## 🖼️ ConfigMap & Secrets
 
-![ConfigMap and Secret](Assets/images/configmap-secret.png)
+![ConfigMap and Secret](Assets/screenshots/configmap-secret.png)
 ---
 
 
 # 🔥 Challenges Solved
 
-- Fixed ALB not creating due to missing OIDC association
-- Resolved Ingress path routing conflict (/api duplication issue)
-- Debugged Service port mismatch (80 vs 5173)
-- Fixed Target Group unhealthy issue
-- Implemented secure SSL termination via ACM
-- Configured GitOps auto-sync workflow
+- Fixed ALB not creating due to missing OIDC association  
+  → Added `eksctl utils associate-iam-oidc-provider` before controller install
+- Resolved Ingress path routing conflict (/api duplication issue)  
+  → Removed duplicate `/api` prefix from backend Ingress path rule
+- Debugged Service port mismatch (80 vs 5173)  
+  → Updated Service targetPort to match Vite dev server port 5173
+- Fixed Target Group unhealthy issue  
+  → Added correct health check path `/api/health` in Ingress annotations
+- Implemented secure SSL termination via ACM  
+  → Attached ACM certificate ARN via `alb.ingress.kubernetes.io/certificate-arn`
+- Configured GitOps auto-sync workflow  
+  → Set ArgoCD sync policy to automated with self-heal enabled
 
 ---
 
@@ -317,5 +327,7 @@ Prometheus and Grafana exposed via ALB Ingress.
 
 # 👨‍💻 Author
 
-Harshal Gharat  
-DevOps | Kubernetes | AWS | DevSecOps
+**Harshal Gharat**  
+DevOps | Kubernetes | AWS | DevSecOps  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/harshalgharat01/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/harshal019)
